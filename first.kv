@@ -2,10 +2,7 @@
 #:import MDScreenManager kivymd.uix.screenmanager.MDScreenManager
 #:import MDFadeSlideTransition kivymd.uix.transition.transition.MDFadeSlideTransition
 
-<CustomProgressBar@ProgressBar>:
-    size_hint: 1.0, None
-    height: '10sp'
-    pos_hint: {'center_x': 0.5, 'center_y': 0.1}
+
 
 
 <MainScreen>:
@@ -22,9 +19,13 @@
             text: "LETS CODE!"
             md_bg_color: (0.6, 0.4, 0.8, 1)
             text_color: 1, 1, 1, 1
-            font_size:30
+            font_size: 35
+            size_hint: 0.5, 0.1   # Wyłącz stosowanie hintów wielkości
+            size: 200, 100   # Ustaw własny rozmiar przycisku
             pos_hint: {'center_x': 0.5, 'center_y': 0.2}
+
             on_release: root.GUZIK()
+
 
 
     ScreenFour:
@@ -46,14 +47,14 @@
                 pos_hint:{'center_y': 0.76}
 
                 font_style: "H6"
-                text: "LOGIN"
+                text: "WELCOME"
             MDTextField:
                 id: userinput
                 hint_text: "Nickname"                                
 #                mode: 'rectangle'
                 icon_right: "/home/esclimited/Pictures/Icons/icons8-name-64.png"
                 pos_hint:{'center_x': 0.5, 'center_y': 0.6 }
-                size_hint_x : None
+                size_hint: 0.6, 0.1
                 width : 300
             MDTextField:
                 id: password
@@ -64,7 +65,7 @@
                 helper_text_mode: "on_focus"
                 icon_right: "account-lock"
                 pos_hint:{'center_x': 0.5, 'center_y': 0.45 }
-                size_hint_x : None
+                size_hint: 0.6, 0.1
                 width : 300                
             MagicButton:
                 id: MTB
@@ -118,7 +119,7 @@
                         pos_hint: {'right' : 1, 'center_y': .5}
                         halign: "right"
                         valign: "middle"
-                        icon: 'icons8-name-64.png'
+                        icon: 'login-variant'
         
             
     ScreenTwo:
@@ -265,7 +266,7 @@
                     MDLabel:
                         #pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                         padding : 9,1
-                        text: "Play"
+                        text: "Play Ranked"
                         halign: "center"
                         pos_hint: {'x': self.width/2}                        
                         font_name: 
@@ -324,6 +325,7 @@
             md_bg_color: 0.6, 0.4, 0.8, 1
             text_color: 1, 1, 1, 1
             font_size: 24
+            size_hint: 0.4, 0.1
             pos_hint: {'center_x': 0.5, 'center_y': 0.1}
             on_release: root.kolejka()
 
@@ -359,10 +361,17 @@
                 #pos_hint: {'center_x': 0.49, 'center_y': 0.17}
 
 
-            CustomProgressBar:
-                id: tom
-                max: 2500
-                value: 2500
+
+
+            Label:
+                id: czas
+
+                text: '30'
+                size_hint_y: None
+                height: self.texture_size[1]
+                font_size: '55'
+                pos_hint: {'center_x': 0.5, 'center_y': 0.12}
+
 
             MDTopAppBar:
                 pos_hint: {'x': 0, 'top': 1}

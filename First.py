@@ -32,8 +32,6 @@ import asyncio
 import threading
 import json
 import os
-Window.size = 360, 600
-# Transition = False
 
 checkActive = None
 
@@ -64,7 +62,9 @@ class MainScreen(ScreenManager):
 
 
     def kolejka(self):
-        return Clock.schedule_once(lambda dt: self.changescreen('test2'), .6)
+        self.show_dialog()
+
+
 
 
 
@@ -103,18 +103,6 @@ class MainScreen(ScreenManager):
 
         menu_items2 = [
             {
-                "text": f"[color=#ffffff]POLISH[/color]",
-                "viewclass": "OneLineListItem",
-                "theme_text_color": "Custom",
-                "on_release": lambda x='Choose Theme': self.POLISH(),
-            },
-            {
-                "text": f"[color=#ffffff]ENGLISH[/color]",
-                "viewclass": "OneLineListItem",
-                "theme_text_color": "Custom",
-                "on_release": lambda x='Language': self.ENGLISH(),
-            },
-            {
                 "text": f"[color=#ffffff]LOGOUT[/color]",
                 "viewclass": "OneLineListItem",
                 "theme_text_color": "Custom",
@@ -138,7 +126,7 @@ class MainScreen(ScreenManager):
     def wyslij(self,s,d):
         public_key, private_key = rsa.newkeys(1024)
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        client.connect(('192.168.1.24', 5555))
+        client.connect(('34.95.8.155', 5555))
 
         client.send(public_key.save_pkcs1("PEM"))
         public_partner = rsa.PublicKey.load_pkcs1(client.recv(1024))
@@ -190,6 +178,8 @@ class MainScreen(ScreenManager):
             return Clock.schedule_once(lambda dt: self.changescreen('test2'), .6)
         else:
             return 0
+
+
 
 
     def show_confirmation_dialog(self, odp, k):
@@ -315,12 +305,33 @@ class MainScreen(ScreenManager):
         )
         self.dialog.open()
 
+    def show_dialog(self):
+        a="SERVER"
+        b="sorry we already found a game for you you can't exit now get ready to play the game will be launched in a moment"
+        self.dialog = MDDialog(
+            title=a + ":",
+            text=b,
+            buttons=[
+                MDFlatButton(
+                    text="OK :C",
+                    theme_text_color="Custom",
+                    text_color=FirstApp().theme_cls.primary_color,
+
+                    on_release=self.JGA_POTEGA,
+
+                ),
+            ],
+        )
+        self.dialog.open()
+
+    def JGA_POTEGA(self,s):
+        self.dialog.dismiss()
     def log(self):
         global selected_jezyk
         try:
             public_key, private_key = rsa.newkeys(1024)
             client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            client.connect(('192.168.1.24', 5555))
+            client.connect(('34.95.8.155', 5555))
 
             client.send(public_key.save_pkcs1("PEM"))
             public_partner = rsa.PublicKey.load_pkcs1(client.recv(1024))
@@ -350,7 +361,7 @@ class MainScreen(ScreenManager):
 
                 # Inicjalizacja połączenia z serwerem
                 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                client.connect(('192.168.1.24', 5555))
+                client.connect(('34.95.8.155', 5555))
 
                 # Wysłanie klucza publicznego do serwera
                 client.send(public_key.save_pkcs1("PEM"))
@@ -444,7 +455,7 @@ class MainScreen(ScreenManager):
         public_key, private_key = rsa.newkeys(1024)
         # Inicjalizacja połączenia z serwerem
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        client.connect(('192.168.1.24', 5555))
+        client.connect(('34.95.8.155', 5555))
 
         # Wysłanie klucza publicznego do serwera
         client.send(public_key.save_pkcs1("PEM"))
@@ -471,7 +482,7 @@ class MainScreen(ScreenManager):
         public_key, private_key = rsa.newkeys(1024)
         # Inicjalizacja połączenia z serwerem
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        client.connect(('192.168.1.24', 5555))
+        client.connect(('34.95.8.155', 5555))
 
         # Wysłanie klucza publicznego do serwera
         client.send(public_key.save_pkcs1("PEM"))
@@ -535,16 +546,20 @@ class MainScreen(ScreenManager):
 
 
     def licznik1(self):
-        sss=2500
+        sss=30
         s=0
         while sss-s!=0:
             if spos>0:
                 s=s+1
                 #self.ids.pog.text=str(sss-s)
-                self.ids.tom.value=sss-s
-                time.sleep(0.01)
+                p=sss-s
+                if p <10:
+                    self.ids.czas.text="0"+str(p)
+                else:
+                    self.ids.czas.text=str(p)
+                time.sleep(1)
             else:
-                break
+                return 1
 
     async def gra1(self, reader, writer, rund):
         global SelectedAnswer
@@ -556,8 +571,7 @@ class MainScreen(ScreenManager):
         spos=0
         s=0
         H=""
-        #self.ids.pog.text = "25"
-        self.ids.tom.value=2500
+        self.ids.czas.text = "30"
         s = rund * 10
         s = str(s)
         data = await reader.read(1024)
@@ -589,6 +603,8 @@ class MainScreen(ScreenManager):
 
         if p == "tie get ready to another round":
             await self.gra1(reader, writer, rund + 1)
+        spos=0
+
         return 1
 
     def licznik(self):
@@ -610,7 +626,7 @@ class MainScreen(ScreenManager):
         global selected_Language
         global SelectedAnswer
         try:
-            reader, writer = await asyncio.open_connection('192.168.1.24', 1234)
+            reader, writer = await asyncio.open_connection('34.95.8.155', 1234)
             client = reader, writer
             if selected_jezyk=="PL":
                 self.ids.time_label.text="PRZEWIDYWANY CZAS: "+str(random.randint(20,120))+"sec"
@@ -747,7 +763,7 @@ class MainScreen(ScreenManager):
                     # Inicjalizacja połączenia z serwerem
                     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                     print("DSADA")
-                    client.connect(('192.168.1.24', 5555))
+                    client.connect(('34.95.8.155', 5555))
                     # Wysłanie klucza publicznego do serwera
                     client.send(public_key.save_pkcs1("PEM"))
                     print("ASDADA")
@@ -767,7 +783,7 @@ class MainScreen(ScreenManager):
                     # Zamknięcie połączenia z serwerem
                     client.close()
                     if response == "TAK":
-                        self.ids.LOGIN.text = "registration was successful, please log in"
+                        self.ids.LOGIN.text = "registration was successful log in"
                     elif response == "ZAJETE":
                         self.ids.LOGIN.text = "this name is already taken"
 
@@ -785,7 +801,7 @@ class MainScreen(ScreenManager):
                     thread = threading.Thread(target=self.niezacinav2)
                     thread.start()
                 else:
-                    self.ids.LOGIN.text = "your nickname can be up to 8 characters long"
+                    self.ids.LOGIN.text = "your nick can be up to 8 characters"
             else:
                 self.ids.LOGIN.text = "the password is too short"
         else:
@@ -798,7 +814,7 @@ class MainScreen(ScreenManager):
             public_key, private_key = rsa.newkeys(1024)
             # Inicjalizacja połączenia z serwerem
             client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            client.connect(('192.168.1.24', 5555))
+            client.connect(('34.95.8.155', 5555))
             # Wysłanie klucza publicznego do serwera
             client.send(public_key.save_pkcs1("PEM"))
             public_partner = rsa.PublicKey.load_pkcs1(client.recv(1024))
@@ -830,7 +846,7 @@ class MainScreen(ScreenManager):
                 public_key, private_key = rsa.newkeys(1024)
                 # Inicjalizacja połączenia z serwerem
                 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                client.connect(('192.168.1.24', 5555))
+                client.connect(('34.95.8.155', 5555))
                 # Wysłanie klucza publicznego do serwera
                 print("FASFAFASFASF")
                 client.send(public_key.save_pkcs1("PEM"))
